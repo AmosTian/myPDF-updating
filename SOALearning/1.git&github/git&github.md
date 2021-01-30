@@ -1,8 +1,10 @@
 # git&github
 
-@[Auspice Tian][5天两套git视频的笔记啊，一个移动就没了啊啊啊啊啊啊啊啊啊2021年1月29日11:42:39]
+@(SOA)[Auspice Tian][5天两套git视频的笔记啊，一个移动就没了啊啊啊啊啊啊啊啊啊2021年1月29日11:42:39]
 
 [TOC]
+
+<div style="page-break-after:always"></div>
 
 ## 版本控制工具
 
@@ -30,6 +32,8 @@
 
 -   原始文件与版本信息在每台主机上都有保存
 
+<div style="page-break-after:always"></div>
+
 ## git结构
 
 #### git 本地库
@@ -46,7 +50,7 @@
 
 ![](git&github.assets/image-20210125165215216.png)
 
-
+<div style="page-break-after:always"></div>
 
 ## git命令行操作
 
@@ -389,6 +393,8 @@ git --version
 #### 团队外协作
 
 ![image-20210126171932198](git&github.assets/image-20210126171932198.png)
+
+<div style="page-break-after:always"></div>
 
 ## git实现机制
 

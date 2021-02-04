@@ -121,9 +121,13 @@
 
     ![image-20210131121954245](maven.assets/image-20210131121954245.png)
 
+-   
+
 #### Maven核心概念
 
 ##### **约定的目录结构**
+
+只要有 `pom.xml`，Eclipse和IDEA都可以识别为Maven项目
 
 Hello
 
@@ -202,6 +206,12 @@ Hello
             ```xml
             <version>1.0.0</version>
             ```
+            
+            -   SNAPSHOT（快照，开发版）
+            -   alpha（内测版）
+            -   beta（公测版）
+            -   Release | RC（发布版）
+            -   GA（正常版）
 
 3.  Maven工程的坐标与仓库中路径的对应关系
 
@@ -470,6 +480,8 @@ Maven的核心程序中定义了抽象的生命周期
 
 ## 常用Maven命令
 
+>   mvn [plugin-name]:[goal-name]
+
 >   执行与构建过程相关的Maven命令，必须进入pox.xml所在的目录
 
 -   编译、测试、打包、部署
@@ -487,34 +499,6 @@ Maven的核心程序中定义了抽象的生命周期
 ![image-20210201094054999](maven.assets/image-20210201094054999.png)
 
 ![image-20210201105352326](maven.assets/image-20210201105352326.png)
-
-#### 联网问题
-
--   Maven的核心程序仅定义了抽象的生命周期，但具体的工作必须由特定插件完成，插件不在Maven的核心程序中
-
--   当执行的Maven命令需要用到某些插件，Maven核心程序会先到本地仓库中查找
-
--   本地仓库的默认位置：[当前用户的家目录]\\.m2\repository
-
-    ![image-20210131182019118](maven.assets/image-20210131182019118.png)
-
--   Maven核心程序如果在本地仓库中找不到所需插件，则会连接外网，到中央仓库下载
-
-    ![image-20210131182150348](maven.assets/image-20210131182150348.png)
-
--   若无法连接外网，构建失败
-
->   解决办法
-
-修改默认本地仓库的位置
-
--   Maven的解压目录\conf\settings.xml
-
-    ![image-20210131183114299](maven.assets/image-20210131183114299.png)
-
--   找到localRepository标签
-
-    ![image-20210131183046608](maven.assets/image-20210131183046608.png)
 
 ### mvn test-compile——编译测试程序
 
@@ -535,6 +519,10 @@ Maven的核心程序中定义了抽象的生命周期
 >   测试报告
 
 ![image-20210131191456139](maven.assets/image-20210131191456139.png)
+
+### mvn exec:java -Dexec.mainClass="com.atguigu.maven.Hello"
+
+>   单独启动某个带有main方法的class
 
 ### mvn package——打包
 
@@ -561,6 +549,10 @@ Maven的核心程序中定义了抽象的生命周期
 ![image-20210201105544402](maven.assets/image-20210201105544402.png)
 
 ### mvn site——生成站点文档
+
+
+
+### mvn deploy——将打包的文件发到远程参考
 
 <div style="page-break-after:always"></div>
 
@@ -763,6 +755,238 @@ public class MakeFriendsTest {
 }
 ```
 
+## Maven配置
+
+### 指定默认JDK版本
+
+>    问题：JDK默认1.5
+
+>    解决
+
+1.  maven -> settings.xml
+
+    ==profiles== 标签
+
+2.  ![image-20210201103601291](maven.assets/image-20210201103601291.png)
+
+```xml
+<profiles>
+    <profile>
+        <id>development</id>
+        <activation>
+            <jdk>1.8</jdk>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <properties>
+            <maven.compiler.source>1.8</maven.compiler.source>
+            <maven.compiler.target>1.8</maven.compiler.target> 
+            <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+        </properties>
+    </profile>
+</profiles>
+```
+
+### 修改本地仓库位置
+
+-   Maven的核心程序仅定义了抽象的生命周期，但具体的工作必须由特定插件完成，插件不在Maven的核心程序中
+
+-   当执行的Maven命令需要用到某些插件，Maven核心程序会先到本地仓库中查找
+
+-   本地仓库的默认位置：[当前用户的家目录]\\.m2\repository
+
+    ![image-20210131182019118](maven.assets/image-20210131182019118.png)
+
+-   Maven核心程序如果在本地仓库中找不到所需插件，则会连接外网，到中央仓库下载
+
+    ![image-20210131182150348](maven.assets/image-20210131182150348.png)
+
+-   若无法连接外网，构建失败
+
+>   解决办法
+
+修改默认本地仓库的位置
+
+-   Maven的解压目录\conf\settings.xml
+
+    ![image-20210131183114299](maven.assets/image-20210131183114299.png)
+
+-   找到localRepository标签
+
+    ![image-20210131183046608](maven.assets/image-20210131183046608.png)
+
+### 修改镜像路径
+
+>    问题：下载速度慢
+
+解决办法：插件下载路径修改为国内镜像
+
+```xml
+<!--seetings.xml-->
+<mirrors>
+	<mirror>
+      <id>nexus-aliyun</id>
+      <mirrorOf>central</mirrorOf>
+      <name>Nexus aliyun</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+    </mirror>
+</mirrors>
+```
+
+## IDEA中Maven
+
+### 配置
+
+>   File -> Settings ：仅为当前项目配置
+
+>   File -> New Project Settings：为所有项目
+
+
+
+1.  为所有项目配置
+
+    ![image-20210202165617105](maven.assets/image-20210202165617105.png)
+
+2.  修改Maven核心程序位置
+
+    ![image-20210202164953692](maven.assets/image-20210202164953692.png)
+
+    3.  自动构建Maven工程
+
+    ![image-20210204153856296](maven.assets/image-20210204153856296.png)
+
+4.  手动新建文件夹时，Maven不会自动识别，要手动将其标记为Maven文件目录结构
+
+    -   项目预览右键
+
+        ![image-20210202172725528](maven.assets/image-20210202172725528.png)
+
+        IDEA Maven Java项目
+
+        ![image-20210202172925317](maven.assets/image-20210202172925317.png)
+
+    -   Project Structure
+
+        ![image-20210202172913219](maven.assets/image-20210202172913219.png)
+
+
+
+### 创建Maven Java项目
+
+#### 勾选后会联网下载对应的Maven工程框架与相关依赖
+
+![image-20210202171657440](maven.assets/image-20210202171657440.png)
+
+打开项目后会下载依赖到仓库，在 `pom.xml` 中引用插件
+
+![image-20210202172331618](maven.assets/image-20210202172331618.png)
+
+![image-20210202172628656](maven.assets/image-20210202172628656.png)
+
+#### 创建简单Maven Java工程
+
+##### 1. 创建
+
+![image-20210204155935952](maven.assets/image-20210204155935952.png)
+
+![image-20210202171806011](maven.assets/image-20210202171806011.png)
+
+```xml
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.11</version>
+    <scope>test</scope>
+</dependency>
+```
+
+##### 编写主程序代码
+
+ ```java
+public class Hello {
+    public String sayHello(String name){
+        return "Hello " + name + "!";
+    }
+}
+ ```
+
+##### 编写测试程序
+
+```java
+public class HelloTest {
+    @Test
+    public void testHelloTest(){
+        Hello hello = new Hello();
+        String maven = hello.sayHello("Maven");
+        System.out.println(maven);
+    }
+}
+```
+
+#### IDEA中执行Maven命令
+
+![image-20210204162419589](maven.assets/image-20210204162419589.png)
+
+![image-20210204162506924](maven.assets/image-20210204162506924.png)
+
+#### 创建Maven编译器
+
+![image-20210202173106015](maven.assets/image-20210202173106015.png)
+
+![image-20210202173214717](maven.assets/image-20210202173214717.png)
+
+### 创建Web项目
+
+![image-20210202173959717](maven.assets/image-20210202173959717.png)
+
+![image-20210202174029893](maven.assets/image-20210202174029893.png)
+
+#### 修改打包方式
+
+```xml
+<!-- Web工程打包方式为War -->
+<packaging>war</packaging>
+```
+
+#### 新建WEB文件夹与配置
+
+![image-20210204163848130](maven.assets/image-20210204163848130.png)
+
+![image-20210204164136993](maven.assets/image-20210204164136993.png)
+
+![image-20210204164213575](maven.assets/image-20210204164213575.png)
+
+#### 配置Tomcat编译器
+
+##### 新建
+
+![image-20210204164755471](maven.assets/image-20210204164755471.png)
+
+##### 配置编译器属性
+
+![image-20210204164853276](maven.assets/image-20210204164853276.png)
+
+##### 配置打包部署属性
+
+![image-20210204165407572](maven.assets/image-20210204165407572.png)
+
+An artifact is an assembly of your project assets that you put together to test, deploy or distribute your software solution or its part. Examples are a collection of compiled Java classes or a Java application packaged in a Java archive, a Web application as a directory structure or a Web application archive, etc.
+
+即编译后的Java类，Web资源等的整合，用以测试、部署等工作。再白话一点，就是说某个module要如何打包，例如war exploded、war、jar、ear等等这种打包形式。某个module有了 Artifacts 就可以部署到应用服务器中了
+
+***jar**：Java ARchive，通常用于聚合大量的Java类文件、相关的元数据和资源（文本、图片等）文件到一个文件，以便分发Java平台应用软件或库；*
+
+***war**：Web application ARchive，一种JAR文件，其中包含用来分发的JSP、Java Servlet、Java类、XML文件、标签库、静态网页（HTML和相关文件），以及构成Web应用程序的其他资源；*
+
+***exploded**：在这里你可以理解为展开，不压缩的意思。也就是war、jar等产出物没压缩前的目录结构。建议在开发的时候使用这种模式，便于修改了文件的效果立刻显现出来。
+
+##### 中文乱码
+
+>   tomcat/conf/logging.properties
+
+```
+java.util.logging.ConsoleHandler.encoding = GBK
+```
+
 ## eclipse中Maven
 
 ### Maven插件的设置
@@ -790,35 +1014,6 @@ public class MakeFriendsTest {
 ![image-20210201101838335](maven.assets/image-20210201101838335.png)
 
 ![image-20210201102018785](maven.assets/image-20210201102018785.png)
-
->    问题：JDK默认1.5
-
->    解决
-
-1.  maven -> settings.xml
-
-    ==profiles== 标签
-
-2.  ![image-20210201103601291](maven.assets/image-20210201103601291.png)
-
-    ```xml
-    <profiles>
-      <profile>
-        <id>development</id>
-        <activation>
-          <jdk>1.7</jdk>
-          <activeByDefault>true</activeByDefault>
-        </activation>
-        <properties>
-          <maven.compiler.source>1.7</maven.compiler.source>
-          <maven.compiler.target>1.7</maven.compiler.target>
-          <maven.compiler.compilerVersion>1.7</maven.compiler.compilerVersion>
-        </properties>
-      </profile>
-    </profiles>
-    ```
-
-    ![image-20210201103941340](maven.assets/image-20210201103941340.png)
 
 #### 创建Maven版Web工程
 
@@ -893,7 +1088,7 @@ public class MakeFriendsTest {
 </dependency>
 ```
 
-##### 部署到Tomcat
+##### 4. 部署到Tomcat
 
 ```xml
 <project>
@@ -927,7 +1122,7 @@ public class MakeFriendsTest {
                 <executions>
                 	<exexution>
                     	<id>cargo-run</id>
-                        <!--声明周期的阶段-->
+                        <!--生命周期的阶段-->
                         <phase>install</phase>
                         <goals>
                         	<!--插件的目标-->
@@ -948,9 +1143,10 @@ public class MakeFriendsTest {
 >   eclipse工程必须有的配置文件
 >
 >   -   .settings
->
 >   -   .classpath
 >   -   .project
+
+只要有pom.xml的工程都可作为maven工程导入
 
 ![image-20210201140858531](maven.assets/image-20210201140858531.png)
 
@@ -978,4 +1174,3 @@ public class MakeFriendsTest {
 >   项目中的依赖必须在Maven中找到
 
 ![image-20210201195018571](maven.assets/image-20210201195018571.png)
-

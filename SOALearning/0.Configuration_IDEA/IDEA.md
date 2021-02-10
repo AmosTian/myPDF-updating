@@ -136,6 +136,12 @@
 
 ![image-20210204101446563](IDEA.assets/image-20210204101446563.png)
 
+配置好上面两步后，项目还是不能自动进行热部署或自动编译，原因maven未对项目进行编译到target相应的目录中。则进行操作第三步骤。
+
+3、Ctrl+Shift+Alt+/ 选择Registry,勾选compiler.automake.allow.when.app.running
+
+![img](IDEA.assets/20180613233659916)
+
 ### 断点调试
 
 ![image-20210204125156474](IDEA.assets/image-20210204125156474.png)

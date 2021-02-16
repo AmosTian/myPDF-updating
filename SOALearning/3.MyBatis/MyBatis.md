@@ -513,7 +513,7 @@ Maven默认的资源（自己配置的xml）位置在resources目录下，当前
             <directory>src/main/java</directory>
             <!-- 设置可被识别通过的文件类型 -->
             <includes>
-                <include>**/*.properities</include>
+                <include>**/*.properties</include>
                 <include>**/*.xml</include>
             </includes>
             <filtering>true</filtering>
@@ -524,7 +524,7 @@ Maven默认的资源（自己配置的xml）位置在resources目录下，当前
             <directory>src/main/resources</directory>
             <!-- 设置可被识别通过的文件类型 -->
             <includes>
-                <include>**/*.properities</include>
+                <include>**/*.propertes</include>
                 <include>**/*.xml</include>
             </includes>
             <filtering>true</filtering>
@@ -667,9 +667,9 @@ Maven默认的资源（自己配置的xml）位置在resources目录下，当前
 >           -   dataSource（数据源）
 >   -   [mappers（映射器）](https://mybatis.org/mybatis-3/zh/configuration.html#mappers)
 
-#### 属性（properities）
+#### 属性（properties）
 
->   通过Properities引用配置文件
+>   通过Properties引用配置文件
 >
 >   -   **优先使用外部配置文件**
 

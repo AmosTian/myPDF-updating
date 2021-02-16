@@ -236,7 +236,7 @@ F-->G["包含了所有已被虚拟机加载的class和static变量等数据"]
 
 ==类缓存==：JavaSE类加载器按要求查找类，一旦某个类被加载到类加载器中，将维持加载（缓存）一段时间；可用GC回收
 
-<img src="annotation&amp;reflection.assets/image-20210213112419797.png" alt="image-20210213112419797" style="zoom:50%;" />
+![image-20210213112419797](annotation&reflection.assets/image-20210213112419797.png)
 
 ![image-20210213112917462](annotation&reflection.assets/image-20210213112917462.png)![image-20210213113239432](annotation&reflection.assets/image-20210213113239432.png)
 

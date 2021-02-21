@@ -25,7 +25,7 @@
 
 ### JDBC
 
-JDBC驱动程序：JDBC(Java Database Connectivity， Java 数 据 库 连 接)是 一 种可用于执行 SQL 语句的 Java API(Application Programming Interface， 应用程序设计接口)
+JDBC驱动程序：JDBC(Java Database Connectivity， Java 数 据 库 连 接)是 一 种可用于执行 SQL 语句的 Java API(Application Programming Interface)
 
 -   实现了从 Java 程序内调用标准的 SQL 命令对数据库进行查询、插入、删除和更新等操作， 并确保数据事务的正常进行
 -   基本层次结构由 Java 程序、JDBC 驱动程序管理器、驱动程序和数据库四部分组成
@@ -47,7 +47,7 @@ public static void connectionTest(){
         Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
  
         // 2. 根据特定的数据库连接URL，返回与此URL的所匹配的数据库驱动对象
-        Driver driver = DriverManager.getDriver(URL);
+        Driver driver = DriverManager.getDriver("jdbc:mysql://localhost:3306/[dbName]");
         // 3. 传入参数，比如说用户名和密码
         Properties props = new Properties();
         props.put("user", USER_NAME);
@@ -61,11 +61,9 @@ public static void connectionTest(){
         // 6. 执行 sql 语句，返回结果
         resultSet = statement.executeQuery("select * from activity");
         // 7. 处理结果，取出数据
-        while(resultSet.next())
-        {
+        while(resultSet.next()){
             System.out.println(resultSet.getString(2));
         }
- 
         .....
     }finally{
         // 8.关闭链接，释放资源  按照JDBC的规范，使用完成后管理链接，
@@ -101,8 +99,8 @@ public static void connectionTest(){
 
 好处：
 
--   简单：两个jar文件+配置几个sql映射文件
--   灵活：sql写在xml里，统一管理
+-   简单：两个jar文件（mybatis.jar+mysql-connector.jar）+配置几个sql映射文件(Mapper)
+-   灵活：sql写在xml里，统一管理（mybatis-config.xml）
 -   解除sql与程序的耦合：通过提供Mapper层，将业务逻辑与数据访问逻辑分离
 -   提供映射标签：JavaBean与数据库ORM字段关系映射
 -   提供xml标签，支持编写动态sql
@@ -333,7 +331,7 @@ public class MyBatisUtils {
 
 #### 实体类
 
-pojo的作用就是将从数据库获取到的数据封装为一个一个的对象，让java能够更好的进行操作DO VO
+pojo的作用就是将从数据库获取到的数据封装为一个一个的对象，让java能够更好的进行操作DO、VO
 
 ```java
 package com.kuang.pojo;
@@ -469,7 +467,7 @@ public class UserDaoTest {
 
 ### 遇到的各种错误
 
-#### org.apache.ibatis.io不存在
+#### org.apache.ibatis.io不存在——IDEA2020.1
 
 ![image-20210206205522726](MyBatis.assets/image-20210206205522726.png)
 
@@ -561,10 +559,9 @@ Maven默认的资源（自己配置的xml）位置在resources目录下，当前
 
 ##### 使用Map的情况
 
->   当字段过多时，考虑使用 **Map**
+>   当字段过多时，考虑使用 **Map，可以自定义需要传递的参数**
 
 -   若使用实体类作为参数传递，当字段过多时，一个实体类的每个属性都必须设置值
--   使用Map，可以自定义需要传递的参数
 
 1.  
 
@@ -959,7 +956,7 @@ MyBatis 可以配置成适应多种环境，**但每个 SqlSessionFactory 实例
 -   `delete` – A mapped DELETE statement.
 -   `select` – A mapped SELECT statement.
 
-### 解决属性名和字段名不一致问题——resultMap
+### ==解决属性名和字段名不一致问题——resultMap==
 
 #### 简单的例子
 

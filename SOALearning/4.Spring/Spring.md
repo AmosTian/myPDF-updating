@@ -19,6 +19,8 @@
 
 (文档地址)[https://docs.spring.io/spring-framework/docs/current/reference/html/index.html]
 
+(各版本文档)[https://docs.spring.io/spring-framework/docs/]
+
 (下载地址)[https://repo.spring.io/release/org/springframework/spring/]
 
 ```xml
@@ -356,7 +358,7 @@ public void test(){
     -   The `property name` element refers to the name of the JavaBean property
     -   and the `ref` element refers to the name of another bean definition. 
 
-### 依赖注入DI
+### ==依赖注入DI==
 
 -   依赖：bean对象的创建依赖于IoC容器
 -   注入：bean对象中的所有属性，由容器来注入
@@ -672,7 +674,7 @@ public class Student {
 
 -   @Resource(name="指定bean.id")
 
-#### 在java中显式配置——零配置xml
+#### ==在java中显式配置——零配置xml==
 
 JavaConfig是Spring的子项目，Spring4后，称为核心功能
 
@@ -797,7 +799,7 @@ public class User {
 
 ## AOP
 
-### 代理模式
+### ==代理模式==
 
 >    代理模式是Spring AOP的底层【Spring AOP】【Spring MVC】
 
@@ -1650,7 +1652,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/context
 <context:property-placeholder location="classpath:db.properties"/>
 ```
 
-#### mapperImpl
+#### ==mapperImpl==
 
 ```java
 public class UserMapperImpl implements UserMapper{
@@ -1883,7 +1885,7 @@ rootPassword=2017002231
 </mapper>
 ```
 
-#### mapperImpl.java
+#### ==mapperImpl.java==
 
 ```java
 public class UserMapperImpl extends SqlSessionDaoSupport implements UserMapper {

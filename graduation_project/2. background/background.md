@@ -4008,11 +4008,51 @@ spring:
         setMaxLifetime: 60000
 ```
 
+### 抽取common工程
 
+分析：
 
+-   多个dubbo服务，需要抽取公共的类、方法到common工程中
+-   实现独立的dubbo服务，便于后期的扩展和维护
 
+在dubbo服务提供方的工程中(`haoke-manage-dubbo-server`)，将BasePOJO、BaseServiceImpl、vo.PageInfo移至该工程；导入公有依赖
 
+其他工程，依赖此工程，并将自己工程中的相关类删除
 
+![image-20210324210335332](background.assets/image-20210324210335332.png)
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>haoke-manage-dubbo-server</artifactId>
+        <groupId>com.haoke.manage</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>haoke-manage-dubbo-server-common</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.16</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+    </dependencies>
+</project>
+```
 
 
 

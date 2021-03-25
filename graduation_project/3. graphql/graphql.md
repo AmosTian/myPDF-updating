@@ -889,6 +889,853 @@ public class HouseResourcesListDataFetcher implements MyDataFetcher {
 
 ![image-20210322134830161](graphql.assets/image-20210322134830161.png)
 
+<div style="page-break-after:always" />
+
+##  前台
+
+前端是使用React+semantic-ui实现移动端web展示，后期可以将web打包成app进行发布  
+
+###  1. 搭建工程
+
+```shell
+npm install # 安装依赖
+npm start #启动服务
+```
+
+地址: http://localhost:9000/  
+
+<img src="../4. 前台/前台.assets/image-20210323222323226.png" alt="image-20210323222323226" style="zoom:67%;" />
+
+### 2. 搭建api工程
+
+使用node.js开发服务端的方式进行了demo化开发，只是作为前端开发的api工程，并不是实际环境
+
+1.  创建数据库
+
+    将 myhome.sql执行 ，创建数据库
+
+2.  修改配置文件——数据库配置
+
+    ```json
+    /** 数据库配置 */
+    db: {
+        /** 模型文件路径 */
+        models_path: '/models',
+        /** 数据库主机IP */
+        host: '8.140.130.91',
+        /** 数据库的端口号 */
+        port: 3306,
+        /** 数据库类型 */
+        type: 'mysql',
+        /** 数据库登录用户名 */
+        username: 'root',
+        /** 数据库密码 */
+        password: 'root',
+        /** 数据库名称 */
+        database: 'myhome',
+        /** 是否显示数据库日志 */
+        logging: console.log,// false 为禁用日志
+        /** 配置数据库连接池 */
+        pool: {
+            max: 5,
+            min: 0,
+            charset: 'utf8',
+            idle: 30000
+        }
+    }
+    ```
+
+3.  输入命令进行初始化和启动服务
+
+    ```shell
+    npm install #安装依赖
+    npm run dev #启动dev脚本
+    
+    #脚本如下
+    "scripts": {
+        "test": "cross-env NODE_ENV=config-test node app.js",
+        "dev": "cross-env NODE_ENV=config-dev node app.js", #设置环境变量
+        "pro": "cross-env NODE_ENV=config-pro node app.js"
+    }
+    ```
+
+4.  登录系统测试
+
+    **问题**
+
+    -   Client does not support authentication protocol requested by server; conside
+
+        ```sql
+        use mysql;
+        
+        flush privileges;
+        
+        -- 加密算法为caching_sha2_password，而旧版加密算法为mysql_native_password
+        select user,host,plugin from user; 
+        
+        alter user 'root'@'%' identified with mysql_native_password by 'root';
+        
+        select user,host,plugin from user;
+        ```
+
+    -    ER_WRONG_FIELD_WITH_GROUP
+
+         ```sql
+         use myhome;
+         
+         SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));
+         
+         select @@sql_mode;
+         ```
+
+         ![image-20210324120933746](graphql.assets/image-20210324120933746.png)
+
+    <img src="../4. 前台/前台.assets/image-20210324121216250.png" alt="image-20210324121216250" style="zoom:67%;" />
+
+### 3. 前台实现分析
+
+#### React APP目录结构
+
+<img src="../4. 前台/前台.assets/image-20210324154457849.png" alt="image-20210324154457849" style="zoom:50%;" />
+
+#### 加载数据流程
+
+![image-20210324161006568](graphql.assets/image-20210324161006568.png)
+
+-   Promise.all()方法获取到所有的异步处理的结果，并且将结果保存到this.state中，然后再render中渲染
+
+-   app.js
+
+    ```js
+    //设置全局的  axios baseUrl 配置
+    axios.defaults.baseURL = config.apiBaseUrl;
+    //设置拦截器
+    axios.interceptors.request.use(function (config) {
+      //在发送请求前获取mytoken的值
+      if(!config.url.endsWith('/login')){
+        config.headers.Authorization = localStorage.getItem('mytoken');
+      }
+      return config;
+    }, function (error) {
+      //获取数据失败处理
+      return Promise.reject(error);
+    });
+    axios.interceptors.response.use(function (response) {
+      // 对响应的拦截——————返回response.data数据
+      return response.data;
+    }, function (error) {
+      return Promise.reject(error);
+    });
+    ```
+
+##### axios
+
+Axios 是一个基于 promise 的 HTTP 库，可以用在浏览器和 node.js 中。
+
+-   从浏览器中创建 [XMLHttpRequests](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest)
+-   从 node.js 创建 [http](http://nodejs.org/api/http.html) 请求
+-   支持 [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) API
+-   拦截请求和响应
+-   转换请求数据和响应数据
+-   取消请求
+-   自动转换 JSON 数据
+-   客户端支持防御
+
+
+
+### 4. 首页轮播广告
+
+#### 1. 查看数据结构
+
+请求地址：
+
+<img src="../4. 前台/前台.assets/image-20210324162901912.png" alt="image-20210324162901912" style="zoom:50%;" />
+
+响应：
+
+![image-20210324162830267](graphql.assets/image-20210324162830267.png)
+
+所以，数据只需要返回图片链接即可
+
+#### 2. 数据表设计
+
+```sql
+use myhome;
+
+CREATE TABLE `tb_ad` (
+`id` bigint(20) NOT NULL AUTO_INCREMENT,
+`type` int(10) DEFAULT NULL COMMENT '广告类型',
+`title` varchar(100) DEFAULT NULL COMMENT '描述',
+`url` varchar(200) DEFAULT NULL COMMENT '图片URL地址',
+`created` datetime DEFAULT NULL,
+`updated` datetime DEFAULT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='广告表';
+
+INSERT INTO `tb_ad` (`id`, `type`, `title`, `url`, `created`, `updated`) VALUES (
+'1','1', 'UniCity万科天空之城', 
+'https://haoke-1257323542.cos.ap-beijing.myqcloud.com/ad-swipes/1.jpg', 
+'2021-3-24 16:36:11','2021-3-24 16:36:16');
+INSERT INTO `tb_ad` (`id`, `type`, `title`, `url`, `created`, `updated`) VALUES (
+'2','1', '天和尚海庭前',
+'https://haoke-1257323542.cos.ap-beijing.myqcloud.com/ad-swipes/2.jpg', 
+'2021-3-24 16:36:43','2021-3-24 16:36:37');
+INSERT INTO `tb_ad` (`id`, `type`, `title`, `url`, `created`, `updated`) VALUES (
+'3', '1', '[奉贤 南桥] 光语著', 
+'https://haoke-1257323542.cos.ap-beijing.myqcloud.com/ad-swipes/3.jpg', 
+'2021-3-24 16:38:32','2021-3-24 16:38:26');
+INSERT INTO `tb_ad` (`id`, `type`, `title`, `url`, `created`, `updated`) VALUES (
+'4','1', '[上海周边 嘉兴] 融创海逸长洲', 
+'https://haoke-1257323542.cos.ap-beijing.myqcloud.com/ad-swipes/4.jpg', 
+'2021-3-24 16:39:10','2021-3-24 16:39:13');
+```
+
+#### 3. 实现查询接口(dubbo)
+
+##### 1. 创建工程
+
+<img src="../4. 前台/前台.assets/image-20210325112409709.png" alt="image-20210325112409709" style="zoom:50%;" />
+
+```xml
+<!--haoke-manage-dubbo-server-ad-->
+<dependencies>
+    <dependency>
+        <groupId>com.haoke.manage</groupId>
+        <artifactId>haoke-manage-dubbo-server-common</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+```
+
+```xml
+<!--haoke-manage-dubbo-server-ad-service-->
+<dependencies>
+    <dependency>
+        <groupId>com.haoke.manage</groupId>
+        <artifactId>haoke-manage-dubbo-server-ad-interface</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+```
+
+##### 2. 编写pojo
+
+<img src="../4. 前台/前台.assets/image-20210325115643885.png" alt="image-20210325115643885" style="zoom: 50%;" />
+
+```java
+@Data
+@TableName("tb_ad")
+public class Ad extends BasePojo{
+    private static final long serialVersionUID = -493439243433085768L;
+    
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+
+    //广告类型
+    private Integer type;
+    //描述
+    private String title;
+    //'图片URL地址
+    private String url;
+}
+```
+
+```java
+package com.haoke.server.api;
+
+import com.haoke.server.pojo.Ad;
+import com.haoke.server.vo.PageInfo;
+
+public interface ApiAdService {
+    /**
+     * 分页查询广告数据
+     *
+     * @param type 广告类型
+     * @param page 页数
+     * @param pageSize 每页显示的数据条数
+     * @return
+     */
+    PageInfo<Ad> queryAdList(Integer type, Integer page, Integer pageSize);
+}
+```
+
+##### 3. 实现dubbo服务
+
+<img src="../4. 前台/前台.assets/image-20210325133234793.png" alt="image-20210325133234793" style="zoom:67%;" />
+
+编写接口：
+
+```java
+package com.haoke.server.service;
+
+import com.haoke.server.pojo.Ad;
+import com.haoke.server.vo.PageInfo;
+
+public interface AdService {
+
+    PageInfo<Ad> queryAdList(Ad ad, Integer page, Integer pageSize);
+}
+```
+
+实现接口：
+
+```java
+package com.haoke.server.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.haoke.server.pojo.Ad;
+import com.haoke.server.service.AdService;
+import com.haoke.server.service.BaseServiceImpl;
+import com.haoke.server.vo.PageInfo;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AdServiceImpl extends BaseServiceImpl implements AdService {
+    @Override
+    public PageInfo<Ad> queryAdList(Ad ad, Integer page, Integer pageSize) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+
+        //排序
+        queryWrapper.orderByDesc("updated");
+        //按广告的类型查询
+        queryWrapper.eq("type",ad.getType());
+
+        IPage iPage = super.queryPageList(queryWrapper,page,pageSize);
+
+        return new PageInfo<>(Long.valueOf(iPage.getTotal()).intValue(),page,pageSize,iPage.getRecords());
+    }
+}
+```
+
+##### 4. 创建AdMapper接口
+
+```java
+package com.haoke.server.mapper;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.haoke.server.pojo.Ad;
+
+public interface AdMapper extends BaseMapper<Ad> {}
+```
+
+##### 5. 编写MybatisPlusConfig
+
+```java
+package com.haoke.server.config;
+
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@MapperScan("com.haoke.server.mapper")
+@Configuration
+public class MybatisPlusConfig {
+
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+
+        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
+        paginationInnerInterceptor.setDbType(DbType.MYSQL);
+
+        interceptor.addInnerInterceptor(paginationInnerInterceptor);
+
+        return interceptor;
+    }
+}
+```
+
+##### 6. 编写application.properties配置文件
+
+```properties
+# Spring boot application
+spring.application.name = haoke-manage-dubbo-server-ad
+
+# 数据库
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://8.140.130.91:3306/haoke\
+  ?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&autoReconnect=true&allowMultiQueries=true
+spring.datasource.username=root
+spring.datasource.password=root
+
+# hikari设置
+spring.datasource.hikari.maximum-pool-size=60
+spring.datasource.hikari.idle-timeout=60000
+spring.datasource.hikari.connection-timeout=60000
+spring.datasource.hikari.validation-timeout=3000
+spring.datasource.hikari.login-timeout=5
+spring.datasource.hikari.max-lifetime=60000
+
+# 服务的扫描包
+dubbo.scan.basePackages = com.haoke.server.api
+
+# 应用名称
+dubbo.application.name = dubbo-provider-ad
+dubbo.service.version = 1.0.0
+
+# 协议以及端口
+dubbo.protocol.name = dubbo
+dubbo.protocol.port = 21880
+# zk注册中心
+dubbo.registry.address = zookeeper://8.140.130.91:2181
+dubbo.registry.client = zkclient
+```
+
+##### 7. dubbo服务实现类
+
+```java
+package com.haoke.server.api;
+
+import com.alibaba.dubbo.config.annotation.Service;
+import com.haoke.server.pojo.Ad;
+import com.haoke.server.service.AdService;
+import com.haoke.server.vo.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+
+@Service(version = "${dubbo.service.version}")
+public class ApiAdServiceImpl implements ApiAdService{
+    @Autowired
+    private AdService adService;
+
+    @Override
+    public PageInfo<Ad> queryAdList(Integer type, Integer page, Integer pageSize) {
+        Ad ad = new Ad();
+        ad.setType(type);
+
+        return this.adService.queryAdList(ad,page,pageSize);
+    }
+}
+```
+
+##### 8. 编写启动类
+
+```java
+package com.haoke.server;
+
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+
+@SpringBootApplication
+public class AdDubboProvider {
+
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(AdDubboProvider.class)
+                .web(WebApplicationType.NONE)//非web应用
+                .run(args);
+    }
+}
+```
+
+#### 4. 实现API接口(RESTful接口)
+
+##### 1. 导入依赖
+
+```xml
+<!--ad依赖-->
+<dependency>
+    <groupId>com.haoke.manage</groupId>
+    <artifactId>haoke-manage-dubbo-server-ad-interface</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+
+##### 2. 编写WebResult
+
+![image-20210325140008394](graphql.assets/image-20210325140008394.png)
+
+```java
+package com.haoke.api.vo;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Data
+@AllArgsConstructor
+public class WebResult {
+
+    @JsonIgnore
+    private int status;
+    @JsonIgnore
+    private String msg;
+    @JsonIgnore
+    private List<?> list;
+
+    @JsonIgnore
+    public static WebResult ok(List<?> list) {
+        return new WebResult(200, "成功", list);
+    }
+
+    @JsonIgnore
+    public static WebResult ok(List<?> list, String msg) {
+        return new WebResult(200, msg, list);
+    }
+
+    public Map<String, Object> getData() {
+        HashMap<String, Object> data = new HashMap<String, Object>();
+        data.put("list", this.list);
+        return data;
+    }
+
+    public Map<String, Object> getMeta() {
+        HashMap<String, Object> meta = new HashMap<String, Object>();
+        meta.put("msg", this.msg);
+        meta.put("status", this.status);
+        return meta;
+    }
+}
+```
+
+##### 3. 编写Service
+
+```java
+package com.haoke.api.service;
+
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.haoke.api.vo.WebResult;
+import com.haoke.server.api.ApiAdService;
+import com.haoke.server.pojo.Ad;
+import com.haoke.server.vo.PageInfo;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class AdService {
+
+    @Reference(version = "1.0.0")
+    private ApiAdService apiAdService;
+
+    public PageInfo<Ad> queryAdList(Integer type, Integer page, Integer pageSize) {
+
+        return this.apiAdService.queryAdList(type, page, pageSize);
+    }
+}
+```
+
+##### 4. Controler
+
+```java
+package com.haoke.api.controller;
+
+import com.haoke.api.service.AdService;
+import com.haoke.api.vo.WebResult;
+import com.haoke.server.pojo.Ad;
+import com.haoke.server.vo.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RequestMapping("ad")
+@RestController
+@CrossOrigin//允许跨域
+public class AdController {
+    @Autowired
+    private AdService adService;
+
+    /**
+     * 首页广告位
+     * @return
+     */
+    @GetMapping
+    public WebResult queryIndexad(){
+        PageInfo<Ad> pageInfo = this.adService.queryAdList(1,1,3);
+
+        List<Ad> ads = pageInfo.getRecords();
+        List<Map<String,Object>> data = new ArrayList<>();
+        for (Ad ad : ads) {
+            Map<String,Object> map = new HashMap<>();
+
+            map.put("original",ad.getUrl());
+            data.add(map);
+        }
+
+        return WebResult.ok(data);
+    }
+}
+
+```
+
+##### 5. 测试
+
+![image-20210325152651651](graphql.assets/image-20210325152651651.png)
+
+#### 5. 整合前端系统
+
+修改home.js文件中请求地址
+
+```js
+let swipe = new Promise((resolve, reject) => {
+    axios.get('http://127.0.0.1:9091/ad').then((data)=>{
+        resolve(data.data.list);
+    });
+})
+```
+
+![image-20210325153833335](graphql.assets/image-20210325153833335.png)
+
+跨域问题：
+
+![image-20210325154405802](graphql.assets/image-20210325154405802.png)
+
+![image-20210325154518654](graphql.assets/image-20210325154518654.png)
+
+#### 6. 广告的GraphQL接口
+
+##### 1. 目标数据结构
+
+```js
+{
+    "list": [
+        {
+            "original": "http://itcast-haoke.oss-cnqingdao.aliyuncs.com/images/2018/11/26/15432030275359146.jpg"
+        },
+        {
+            "original": "http://itcast-haoke.oss-cnqingdao.aliyuncs.com/images/2018/11/26/15432029946721854.jpg"
+        },
+        {
+            "original": "http://itcast-haoke.oss-cnqingdao.aliyuncs.com/images/2018/11/26/1543202958579877.jpg"
+        }
+    ]
+}
+```
+
+##### 2. haoke.graphql
+
+```graphql
+type HaokeQuery{
+    HouseResourcesList(page:Int, pageSize:Int):TableResult
+    HouseResources(id:ID): HouseResources
+
+	IndexAdList: IndexAdResult
+}
+
+type IndexAdResult{
+    list:[IndexAdResultData]
+}
+
+type IndexAdResultData{
+    original: String
+}
+```
+
+##### 3. 根据GraphQL结构编写VO
+
+```java
+package com.haoke.api.vo.ad.index;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class IndexAdResult {
+    private List<IndexAdResultData> list;
+}
+```
+
+```java
+package com.haoke.api.vo.ad.index;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class IndexAdResultData {
+    private String original;
+}
+```
+
+##### 4. IndexAdDataFetcher
+
+```java
+package com.haoke.api.graphql.myDataFetcherImpl;
+
+import com.haoke.api.graphql.MyDataFetcher;
+import com.haoke.api.service.AdService;
+import com.haoke.api.vo.WebResult;
+import com.haoke.api.vo.ad.index.IndexAdResult;
+import com.haoke.api.vo.ad.index.IndexAdResultData;
+import com.haoke.server.pojo.Ad;
+import com.haoke.server.vo.PageInfo;
+import graphql.schema.DataFetchingEnvironment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
+public class IndexAdDataFetcher implements MyDataFetcher {
+
+    @Autowired
+    private AdService adService;
+
+    @Override
+    public String fieldName() {
+        return "IndexAdList";
+    }
+
+    @Override
+    public Object dataFetcher(DataFetchingEnvironment environment) {
+        PageInfo<Ad> pageInfo = this.adService.queryAdList(1, 1, 3);
+
+        List<Ad> ads = pageInfo.getRecords();
+
+        List<IndexAdResultData> list = new ArrayList<>();
+        for (Ad ad : ads) {
+            list.add(new IndexAdResultData(ad.getUrl()));
+        }
+
+        return new IndexAdResult(list);
+    }
+}
+```
+
+##### 5. 测试
+
+```graphql
+{
+ 	IndexAdList{
+    list{
+      original
+    }
+  }
+}
+```
+
+![image-20210325212209112](graphql.assets/image-20210325212209112.png)
+
+#### 5. GraphQL客户端
+
+![image-20210325213959837](graphql.assets/image-20210325213959837.png)
+
+参考文档：https://www.apollographql.com/docs/react/get-started/
+
+##### 1. 安装依赖
+
+```shell
+npm install @apollo/client graphql
+```
+
+![image-20210325213654529](graphql.assets/image-20210325213654529.png)
+
+##### 2. 创建客户端
+
+```js
+import { ApolloClient, gql } from '@apollo/client';
+
+const client = new ApolloClient({
+  uri: 'http://127.0.0.1:9091/graphql',
+});
+```
+
+##### 3. 定义查询
+
+```js
+//定义查询
+const GET_INDEX_ADS = gql`
+{
+IndexAdList{
+list{
+original
+}
+}
+}
+`;
+
+let swipe = new Promise((resolve, reject) => {
+    client.query({query: GET_INDEX_ADS}).then(result =>
+                                              resolve(result.data.IndexAdList.list));
+})
+```
+
+##### 4. 测试
+
+![image-20210325215219807](graphql.assets/image-20210325215219807.png)
+
+两个问题：
+
+1.  GraphQL服务没有支持cross,Controller上标注@CrossOrigin
+
+2.  Apollo Client发起的数据请求为POST请求，现在实现的GraphQL仅仅实现了GET请求处理 
+
+    ```java
+    package com.haoke.api.controller;
+    
+    import com.fasterxml.jackson.databind.JsonNode;
+    import com.fasterxml.jackson.databind.ObjectMapper;
+    import graphql.GraphQL;
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.*;
+    
+    import java.io.IOException;
+    import java.util.Map;
+    
+    @RequestMapping("graphql")
+    @Controller
+    @CrossOrigin//添加跨域
+    public class GraphQLController {
+    
+        @Autowired
+        private GraphQL graphQL;
+    
+        private static final ObjectMapper MAPPER = new ObjectMapper();
+    
+        @GetMapping
+        @ResponseBody
+        public Map<String,Object> graphql(@RequestParam("query")String query){
+            return this.graphQL.execute(query).toSpecification();
+        }
+    
+    
+        @PostMapping
+        @ResponseBody
+        public Map<String, Object> postGraphql(@RequestBody String json) throws
+                IOException {
+            JsonNode jsonNode = MAPPER.readTree(json);
+            if(jsonNode.has("query")){
+                String query = jsonNode.get("query").asText();
+                return this.graphQL.execute(query).toSpecification();
+            }
+    
+            return null;
+        }
+    }
+    ```
+
+    ![image-20210325220325732](graphql.assets/image-20210325220325732.png)
+
+
+
 
 
 

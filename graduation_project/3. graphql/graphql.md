@@ -588,7 +588,10 @@ public HouseResources queryHouseResourcesById(Long id) {
 **HouseResourceService**
 
 ```java
-    /*
+    @Reference(version = "${dubbo.service.version}")
+    private ApiHouseResourcesService apiHouseResourcesService;
+
+	/*
     * 根据id查询房源数据
     *
     * @Param id
@@ -893,7 +896,7 @@ public class HouseResourcesListDataFetcher implements MyDataFetcher {
 
 ##  前台
 
-前端是使用React+semantic-ui实现移动端web展示，后期可以将web打包成app进行发布  
+前端是使用React+semantic-ui实现移动端web展示，后期可以将web打包成app进行发布 
 
 ###  1. 搭建工程
 
@@ -904,7 +907,7 @@ npm start #启动服务
 
 地址: http://localhost:9000/  
 
-<img src="../4. 前台/前台.assets/image-20210323222323226.png" alt="image-20210323222323226" style="zoom:67%;" />
+<img src="../3. graphql/前台.assets/image-20210323222323226.png" alt="image-20210323222323226" style="zoom:67%;" />
 
 ### 2. 搭建api工程
 
@@ -990,13 +993,13 @@ npm start #启动服务
 
          ![image-20210324120933746](graphql.assets/image-20210324120933746.png)
 
-    <img src="../4. 前台/前台.assets/image-20210324121216250.png" alt="image-20210324121216250" style="zoom:67%;" />
+    <img src="../3. graphql/前台.assets/image-20210324121216250.png" alt="image-20210324121216250" style="zoom:67%;" />
 
 ### 3. 前台实现分析
 
 #### React APP目录结构
 
-<img src="../4. 前台/前台.assets/image-20210324154457849.png" alt="image-20210324154457849" style="zoom:50%;" />
+<img src="../3. graphql/前台.assets/image-20210324154457849.png" alt="image-20210324154457849" style="zoom:50%;" />
 
 #### 加载数据流程
 
@@ -1041,15 +1044,13 @@ Axios 是一个基于 promise 的 HTTP 库，可以用在浏览器和 node.js �
 -   自动转换 JSON 数据
 -   客户端支持防御
 
-
-
 ### 4. 首页轮播广告
 
 #### 1. 查看数据结构
 
 请求地址：
 
-<img src="../4. 前台/前台.assets/image-20210324162901912.png" alt="image-20210324162901912" style="zoom:50%;" />
+<img src="../3. graphql/前台.assets/image-20210324162901912.png" alt="image-20210324162901912" style="zoom:50%;" />
 
 响应：
 
@@ -1090,11 +1091,11 @@ INSERT INTO `tb_ad` (`id`, `type`, `title`, `url`, `created`, `updated`) VALUES 
 '2021-3-24 16:39:10','2021-3-24 16:39:13');
 ```
 
-#### 3. 实现查询接口(dubbo)
+#### 3. 实现查询接口(dubbo服务提供)
 
 ##### 1. 创建工程
 
-<img src="../4. 前台/前台.assets/image-20210325112409709.png" alt="image-20210325112409709" style="zoom:50%;" />
+<img src="../3. graphql/前台.assets/image-20210325112409709.png" alt="image-20210325112409709" style="zoom:50%;" />
 
 ```xml
 <!--haoke-manage-dubbo-server-ad-->
@@ -1120,7 +1121,7 @@ INSERT INTO `tb_ad` (`id`, `type`, `title`, `url`, `created`, `updated`) VALUES 
 
 ##### 2. 编写pojo
 
-<img src="../4. 前台/前台.assets/image-20210325115643885.png" alt="image-20210325115643885" style="zoom: 50%;" />
+<img src="../3. graphql/前台.assets/image-20210325115643885.png" alt="image-20210325115643885" style="zoom: 50%;" />
 
 ```java
 @Data
@@ -1161,7 +1162,7 @@ public interface ApiAdService {
 
 ##### 3. 实现dubbo服务
 
-<img src="../4. 前台/前台.assets/image-20210325133234793.png" alt="image-20210325133234793" style="zoom:67%;" />
+<img src="../3. graphql/前台.assets/image-20210325133234793.png" alt="image-20210325133234793" style="zoom:67%;" />
 
 编写接口：
 

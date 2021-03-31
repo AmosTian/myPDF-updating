@@ -2493,6 +2493,7 @@ public class HouseResources extends BasePojo {
     /**
      * 楼盘id
      */
+    @TableId(value = "ID", type = IdType.AUTO)
     private Long estateId;
 
     /**

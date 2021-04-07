@@ -1,9 +1,5 @@
 # GraphQL
 
-[TOC]
-
-<div style="page-break-after:always" />
-
 ## 简介
 
 ![image-20210320175407784](graphql.assets/image-20210320175407784.png)

@@ -1,9 +1,5 @@
 # 后台系统
 
-[TOC]
-
-<div style="page-break-after:always" />
-
 ## 后台系统架构
 
 ![后台服务系统架构图](background.assets/后台服务系统架构图.png)
@@ -136,7 +132,7 @@ docker run -d --name zk -p 2181:2181 zookeeper:3.5
 
 **服务提供方子模块**
 
-![image-20210312092519632](background.assets/image-20210312092519632.png)
+<img src="background.assets/image-20210312092519632.png" alt="image-20210312092519632" style="zoom:50%;" />
 
 #### 2. 导入依赖
 
@@ -335,7 +331,6 @@ public class UserServiceImpl implements UserService {
         System.out.println("---------Service 3------------");
         return list;
     }
-
 }
 ```
 
@@ -366,7 +361,7 @@ public class DubboProvider {
 
 #### 1. 创建工程
 
-![image-20210312151405295](background.assets/image-20210312151405295.png)
+<img src="background.assets/image-20210312151405295.png" alt="image-20210312151405295" style="zoom:67%;" />
 
 #### 2. 导入依赖
 

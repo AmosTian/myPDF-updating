@@ -1,9 +1,5 @@
 # ReactJS
 
-[TOC]
-
-<div style="page-break-after:always" />
-
 ## ES6新特性
 
 ES6，是ECMAScript 6的简称,JavaScript 的下一代标准，2015 年发布。目标是使JavaScript可用于编写复杂的大型应用程序，称为企业级开发语言。
@@ -737,8 +733,8 @@ console.log(Util.sum(1, 2));
 
 [官网](https://reactjs.org/)
 
-**用于构建用户界面的JavaScript框架**，由Facebook开发
-
+>   **用于构建用户界面的JavaScript框架**，由Facebook开发
+>
 >   ReactJS把复杂的页面，拆分成一个个的组件，将这些组件拼装起来，就会呈现一个页面
 
 ReactJS可用于MVC、MVVM等架构
@@ -757,7 +753,7 @@ ReactJS可用于MVC、MVVM等架构
 
 #### 1. 新建static web项目
 
-![image-20210304205330746](ReactJS.assets/image-20210304205330746.png)
+<img src="ReactJS.assets/image-20210304205330746.png" alt="image-20210304205330746" style="zoom: 33%;" />
 
 #### ==2. 初始化项目,添加umi依赖==
 
@@ -767,13 +763,13 @@ tyarn init -y
 
 ![image-20210304205508883](ReactJS.assets/image-20210304205508883.png)
 
-![image-20210304205523814](ReactJS.assets/image-20210304205523814.png)
+<img src="ReactJS.assets/image-20210304205523814.png" alt="image-20210304205523814" style="zoom:50%;" />
 
 ```shell
 tyarn add umi --dev
 ```
 
-![image-20210304210253679](ReactJS.assets/image-20210304210253679.png)
+<img src="ReactJS.assets/image-20210304210253679.png" alt="image-20210304210253679" style="zoom:50%;" />
 
 #### 3. 编写HelloWorld程序
 
@@ -816,7 +812,7 @@ export default () => {
 umi build
 ```
 
-![image-20210305112349207](ReactJS.assets/image-20210305112349207.png)
+<img src="ReactJS.assets/image-20210305112349207.png" alt="image-20210305112349207" style="zoom: 50%;" />
 
 ![image-20210305120758870](ReactJS.assets/image-20210305120758870.png)
 
@@ -833,11 +829,11 @@ umi dev
 
 在umi中，可以使用约定式的路由，将在pages下的JS文件都会按照文件名映射到一个路由
 
-![image-20210304211837777](ReactJS.assets/image-20210304211837777.png)
+<img src="ReactJS.assets/image-20210304211837777.png" alt="image-20210304211837777" style="zoom:50%;" />
 
 ##### ==5. 添加 `umi-plugin-react` 插件==
 
-umi-plugin-react插件是umi官方基于react封装的插件 
+>   umi-plugin-react插件是umi官方基于react封装的插件 
 
 [链接](https://umijs.org/zh-CN/docs/upgrade-to-umi-3)
 
@@ -861,7 +857,7 @@ export default{
 
 >   JSX语法就是，可以在js文件中插入html片段，是React自创的一种语法 
 >
->   JSX语法会被Babel等转码工具进行转码，得到正常的js代码再执行  
+>   JSX语法会被Babel等转码工具进行转码，得到正常的js代码再执行
 
 **注意**
 
@@ -1562,12 +1558,10 @@ export default TabsTest;
 
 ### 布局
 
--   Layout:	布局容器，其下可嵌套 `Header` `Sider` `Content` `Footer` 或 `Layout` 本
-    身，可以放在任何父容器中。
--   Header:   顶部布局，自带默认样式，其下可嵌套任何元素，只能放在 `Layout` 中。
+-   Layout:	布局容器，其下可嵌套 `Header` `Sider` `Content` `Footer` 或 `Layout` 本身，可以放在任何父容器中。
+-   Header:   顶部布局，自带默认样式，其下可嵌套任何元素，只能放在 `Layout` 中
 -   Sider   :   侧边栏，自带默认样式及基本功能，其下可嵌套任何元素，只能放在 `Layout` 中
--   Content:   内容部分，自带默认样式，其下可嵌套任何元素，只能放在 `Layout`
-    中
+-   Content:   内容部分，自带默认样式，其下可嵌套任何元素，只能放在 `Layout`中
 -   Footer ：  底部布局，自带默认样式，其下可嵌套任何元素，只能放在 `Layout` 中  
 
 #### 搭建整体框架+子页面使用布局
@@ -1779,7 +1773,6 @@ export default UserAdd;
 
 import React from 'react';
 
-
 * ./utils in ./node_modules/jest-config/build/ts3.4/index.d.ts
 UserList.js
 class UserList extends React.Component{
@@ -1836,7 +1829,7 @@ export default {
 
 **注意**
 
->   使用了umi的link标签，目的是出现记录点击的菜单  
+>   使用了umi的link标签，目的是出现记录点击的菜单 
 
 ```jsx
 import React from 'react'
@@ -1895,8 +1888,6 @@ export default BasicLayout;
 ### 表格
 
 [表格文档](https://ant.design/components/table-cn/)
-
-
 
 #### 基本用法
 
@@ -2173,10 +2164,6 @@ tyarn install #安装相关依赖
 tyarn start #启动服务
 ```
 
-测试：
-
-
-
 ### 菜单和路由
 
 在 pro 中，菜单和路由，在 `config/router.config.js` 中进行管理
@@ -2283,7 +2270,7 @@ export default NewAnalysis;
       },
 ```
 
-![image-20210308205111540](ReactJS.assets/image-20210308205111540.png)
+<img src="ReactJS.assets/image-20210308205111540.png" alt="image-20210308205111540" style="zoom:50%;" />
 
 ### Pro中model执行流程
 
@@ -2307,7 +2294,7 @@ export default NewAnalysis;
 
 <div style="page-break-after:always" />
 
-## 前端搭建
+## 后台的前端搭建
 
 ### 创建工程
 

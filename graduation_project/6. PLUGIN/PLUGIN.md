@@ -1,4 +1,4 @@
-# Graph
+# PLUGN
 
 ## 百度地图api
 
@@ -23,13 +23,13 @@
 </script>
 ```
 
-![image-20210407175717290](graphModule.assets/image-20210407175717290.png)
+<img src="PLUGIN.assets/image-20210407175717290.png" alt="image-20210407222725102" style="zoom:67%;" />
 
 ### 使用自定义OverFlowIcon
 
-<img src="graphModule.assets/image-20210407222714946.png" alt="image-20210407222714946" style="zoom:67%;" />
+<img src="PLUGIN.assets/image-20210407222714946.png" alt="image-20210407222714946" style="zoom:67%;" />
 
-<img src="graphModule.assets/image-20210407222725102.png" alt="image-20210407222725102" style="zoom:67%;" />
+<img src="PLUGIN.assets/image-20210407222725102.png" alt="image-20210407222725102" style="zoom:67%;" />
 
 ### 修改数据加载逻辑
 
@@ -121,7 +121,7 @@ public class MapHouseDataFetcher implements MyDataFetcher {
 
 #### 测试Graphql接口
 
-![image-20210407220512638](graphModule.assets/image-20210407220512638.png)
+![image-20210407220512638](PLUGIN.assets/image-20210407220512638.png)
 
 #### 整合前端
 
@@ -175,7 +175,7 @@ client.query({query: GET_MAP_HOUSE}).then(result =>{
 
 测试后，数据是从后端传来的，则数据加载逻辑修改成功
 
-![image-20210407223154903](graphModule.assets/image-20210407223154903.png)
+![image-20210407223154903](PLUGIN.assets/image-20210407223154903.png)
 
 ### 增加拖动事件
 
@@ -215,7 +215,7 @@ map.addEventListener("dragend", function showInfo(){
 
 ### 传递经纬度和缩放比例参数
 
-<img src="graphModule.assets/image-20210408093346102.png" alt="image-20210408093346102" style="zoom:50%;" />
+<img src="PLUGIN.assets/image-20210408093346102.png" alt="image-20210408093346102" style="zoom:50%;" />
 
 #### 实现目标
 
@@ -287,7 +287,7 @@ public class MapHouseDataFetcher implements MyDataFetcher {
 }
 ```
 
-![image-20210408094919920](graphModule.assets/image-20210408094919920.png)
+![image-20210408094919920](PLUGIN.assets/image-20210408094919920.png)
 
 **修改为**
 
@@ -299,7 +299,7 @@ Integer zoom = environment.getArgument("zoom");
 System.out.println("lat -> "+ lat);
 ```
 
-![image-20210408095647842](graphModule.assets/image-20210408095647842.png)
+![image-20210408095647842](PLUGIN.assets/image-20210408095647842.png)
 
 ##### 前端代码修改
 
@@ -446,11 +446,10 @@ use haoke
 
 ###创建索引
 db.house.createIndex({loc:'2d'}) #为house表的loc字段创建地理2d索引
-db.house.createIndex({hid:1},{unique:true}) #为house表的hid字段创建唯一索引
+db.house.createIndex({estate:1},{unique:true}) #为house表的hid字段创建唯一索引
 
 #通过百度api查询地址的经纬度
-http://api.map.baidu.com/geocoder/v2/?address=上海
-xxxx&ak=q60ejYQeO2qZO6dYhWPOHea4aY0bhrqG&output=json
+http://api.map.baidu.com/geocoding/v3/?address=上海&output=json&ak=q60ejYQeO2qZO6dYhWPOHea4aY0bhrqG&callback=showLocation
 
 ###插入数据
 db.house.insert({hid:1,title:'整租 · 南丹大楼 1居室 7500',loc:[121.4482236974557,31.196523937504549]})
@@ -483,6 +482,10 @@ db.house.insert({hid:10,title:'整租 · 2.3.4号中山公园地铁，背靠来�
 { "_id" : ObjectId("606e6ecdc34903ae9b73d0e1"), "hid" : 10, "title" : "整租 · 2.3.4号中山公园地铁，背靠来福士，采光好，诚意出租", "loc" : [ 121.42063977421182, 31.221023374982042 ] }
 { "_id" : ObjectId("606e6ec8c34903ae9b73d0e0"), "hid" : 9, "title" : "整租 · 近地铁2号线，精装1房1厅，高区朝南，享受阳光好房", "loc" : [ 121.42933310871683, 31.221943586471035 ] }
 ```
+
+![image-20210502161518576](PLUGIN.assets/image-20210502161518576.png)
+
+![image-20210502161522600](PLUGIN.assets/image-20210502161522600.png)
 
 ### 实现基于MongoDB的查询
 
@@ -611,21 +614,246 @@ public class MapHouseDataFetcher implements MyDataFetcher {
 }
 ```
 
+<div style="page-break-after:always" />
+
+## 小程序用户登录
+
+![img](https://res.wx.qq.com/wxdoc/dist/assets/img/api-login.2fcc9f35.jpg)
+
+1.  调用 `wx.login()` 获取 **临时登录凭证code** ,并回传到开发者服务器
+
+    wx.login()[https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.login.html]
+
+2.   调用 `code2Session` 接口，换取 **用户唯一标识 OpenId**  和 **会话密钥 session_key**
+
+     -   用户在当前小程序的唯一标识（openid）
+
+     -   微信开放平台帐号下的唯一标识（unionid，若当前小程序已绑定到微信开放平台帐号）
+     -   本次登录的会话密钥（session_key）
+
+**注意**
+
+>   1.  会话密钥 `session_key` 是对用户数据进行 [加密签名][https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html] 的密钥。为了应用自身的数据安全，开发者服务器 **不应该把会话密钥下发到小程序，也不应该对外提供这个密钥**
+>   2.  临时登录凭证 code 只能使用一次
+
+### 编写登录服务
+
+####  1. wx.login()获取code
+
+```js
+<view class="container">
+  <button bindtap="login">登录</button>
+</view>
 
 
+Page({
+  login(){
+    wx.login({
+      success(res){
+        if(res.code){
+          console.log(res.code)
+        }
+      }
+    })
+  }
+})
+```
 
+#### 2.  从微信服务器获取用户相关信息
 
+请求微信的API地址[https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html]
 
+```
+GET https://api.weixin.qq.com/sns/jscode2session?
+appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code
+```
 
+**返回值示例**
 
+```json
+{
+    "session_key": "y/tucPVvjeLvKwayZqE8cA==",
+    "openid": "o4Grc5fzn_KKpmOXZeQ-E2bMboLg"
+}
 
+---
+{
+    "errcode": 40163,
+    "errmsg": "code been used, hints: [ req_id: ZEmBy24ce-iV.NGA ]"
+}
 
+---
+{
+    "errcode": 40029,
+    "errmsg": "invalid code, hints: [ req_id: ZEmBN.iCe-yFGI4a ]"
+}
+```
 
+#### 3. Bean——RestTemplate、JAVA的HTTP工具类
 
+```java
+package com.haoke.api.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
+/*
+* 杂配置
+* */
+@Configuration
+public class HaokeConfig {
 
+    @Bean
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
+    }
+}
+```
 
+#### 4. Controller
 
+```java
+package com.haoke.api.controller;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+
+@RequestMapping("wx")
+@RestController
+public class WxLoginController {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private RedisTemplate<String ,String > redisTemplate;
+
+    @PostMapping("login")
+    public Map<String,Object> wxLogin(@RequestBody HashMap<String, String> param){
+        Map<String,Object> result = new HashMap<>();
+        result.put("status","200");
+
+        String appid = "wx47b56adca7411314";
+        String secret = "2b68f0eb4c8ecfcbec4929f3eee5aee8";
+
+        String url = "https://api.weixin.qq.com/sns/jscode2session?" +
+                "appid="+ appid +
+                "&secret="+ secret +
+                "&js_code="+param.get("code")+
+                "&grant_type=authorization_code";
+
+        String resData = this.restTemplate.getForObject(url,String.class);
+
+        if(StringUtils.contains(resData,"errcode")){
+            //登录失败
+            result.put("status","500");
+            result.put("msg","登录失败");
+
+            return result;
+        }
+
+        String ticket = DigestUtils.md5Hex(resData);
+        String redisKey = "WX_MINIPRO_LOGIN"+ticket;
+        //保存七天
+        this.redisTemplate.opsForValue().set(redisKey,resData, Duration.ofDays(7));
+        result.put("data",ticket);
+
+        return result;
+    }
+}
+```
+
+#### 5. session是否失效
+
+[wx.checkSession(Object object)](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.checkSession.html)
+
+用户越久未使用小程序，用户登录态越有可能失效。反之如果用户一直在使用小程序，则用户登录态一直保持有效。
+
+```js
+checkLogin(){
+    const _this = this
+    wx.checkSession({
+        success: (res) => {
+            // session_key 未过期，并且在本生命周期一直有效
+            wx.showToast({
+                title: '处于登录状态',
+                icon: 'success',
+                duration: 2000
+            });
+        },
+        fail() {
+            wx.showToast({
+                title: '登录已失效!',
+                icon: 'none',
+                duration: 2000
+            });
+            _this.login() // 重新登录
+        }
+    })
+},
+```
+
+#### 6. 登录测试
+
+```js
+login(){
+    wx.login({
+        success(res){
+            console.log(res)
+            if(res.code){
+                //发送临时凭证code，向服务端请求用户标识
+                wx.request({
+                    url: 'http://127.0.0.1:9091/wx/login',
+                    method:"POST",
+                    header:{
+                        "content-type":"application/json"
+                    },
+                    data: {
+                        code: res.code
+                    },
+                    success(res){
+                        console.log(res)
+                        if(res.data.status == 200){
+                            wx.setStorage({
+                                key: 'TICKET',
+                                data: res.data.data
+                            });
+                            wx.showToast({
+                                title: '登录成功',
+                                icon: 'success',
+                                duration: 2000
+                            });
+                        }else{
+                            wx.removeStorage({
+                                key: 'TICKET'
+                            });
+                            wx.showToast({
+                                title: '登录失败!',
+                                icon: 'none',
+                                duration: 2000
+                            })
+                        }
+                    }
+                })
+            }
+        }
+    })
+}
+```
+
+![image-20210425144056602](PLUGIN.assets/image-20210425144056602.png)
+
+### 插件
+
+[wx-jq: wx-jq一套完全原创的微信小程序插件集合库,微信小程序插件,wx-jq (gitee.com)](https://gitee.com/dgx/wx-jq)
 

@@ -2282,7 +2282,7 @@ CREATE TABLE `tb_house_resources` (
 </project>
 ```
 
-#### 使用MybatisPlus的AutoGenerator插件生成POJO文件
+#### 使用MybatisPlus逆向工程
 
 >   mybatis-plus的AutoGenerator插件根据 数据库中的表结构 生成相应的POJO类
 
@@ -3442,8 +3442,6 @@ public ResponseEntity<TableResult> list(HouseResources houseResources,
 ![image-20210320095729934](background.assets/image-20210320095729934.png)
 
 #### 4. 前后端整合
-
-
 
 ![image-20210320152702837](background.assets/image-20210320152702837.png)
 

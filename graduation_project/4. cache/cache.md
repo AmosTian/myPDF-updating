@@ -233,7 +233,7 @@ public class ClusterConfigurationProperties {
 }
 ```
 
-### 注册Redis连接工厂
+### 4. 注册Redis连接工厂
 
 ```java
 package com.haoke.api.config;

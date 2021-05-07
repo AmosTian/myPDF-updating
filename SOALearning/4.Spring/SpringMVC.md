@@ -1,7 +1,5 @@
 # SpringMVC
 
-@(Spring)[Auspice Tian]
-
 [TOC]
 
 <div style="page-break-after:always" />
@@ -1226,7 +1224,7 @@ INSERT  INTO `books`(`bookID`,`bookName`,`bookCounts`,`detail`)VALUES
 
 #### 4. 项目结构
 
-##### 1. pojo
+##### 1. pojo、entity
 
 ```java
 @Data

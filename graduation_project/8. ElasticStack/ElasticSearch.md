@@ -4,9 +4,9 @@
 
 ELK(旧称呼),由ElasticSearch、Logstash、Kibana组成，及新加入的Beats
 
-![image-20210425144906074](ElasticStack.assets/image-20210425144906074.png)
+![image-20210425144906074](ElasticSearch.assets/image-20210425144906074.png)
 
-![image-20210425144937271](ElasticStack.assets/image-20210425144937271.png)
+![image-20210425144937271](ElasticSearch.assets/image-20210425144937271.png)
 
 **ElasticSearch**
 
@@ -154,7 +154,7 @@ docker create --name elasticsearch --net host -e "discovery.type=single-node" -e
 
 Edge：Elasticvue
 
-![image-20210426180507897](ElasticStack.assets/image-20210426180507897.png)
+![image-20210426180507897](ElasticSearch.assets/image-20210426180507897.png)
 
 ## 基本概念
 
@@ -182,7 +182,7 @@ Edge：Elasticvue
 
 -   只要 `_id` 不同,ES将会判断为不同文档，即使两个文档内容相同
 
-    ![image-20210507130403381](ElasticStack.assets/image-20210507130403381.png)
+    ![image-20210507130403381](ElasticSearch.assets/image-20210507130403381.png)
 
 >   文档类型
 
@@ -201,7 +201,7 @@ Edge：Elasticvue
 
 #### 可视化工具创建
 
-![image-20210507113949826](ElasticStack.assets/image-20210507113949826.png)
+![image-20210507113949826](ElasticSearch.assets/image-20210507113949826.png)
 
 ```json
 The index 'test' was successfully created.
@@ -212,7 +212,7 @@ The index 'test' was successfully created.
 }
 ```
 
-<img src="ElasticStack.assets/image-20210507114717604.png" alt="image-20210507114717604" style="zoom:67%;" />
+<img src="ElasticSearch.assets/image-20210507114717604.png" alt="image-20210507114717604" style="zoom:67%;" />
 
 #### ==API创建==
 
@@ -231,13 +231,13 @@ PUT http://8.140.130.91:9200/haoke
 }
 ```
 
-![image-20210507120635950](ElasticStack.assets/image-20210507120635950.png)
+![image-20210507120635950](ElasticSearch.assets/image-20210507120635950.png)
 
-![image-20210507120647717](ElasticStack.assets/image-20210507120647717.png)
+![image-20210507120647717](ElasticSearch.assets/image-20210507120647717.png)
 
 ### 删除索引
 
-<img src="ElasticStack.assets/image-20210507121132446.png" alt="image-20210507121132446" style="zoom:50%;" />
+<img src="ElasticSearch.assets/image-20210507121132446.png" alt="image-20210507121132446" style="zoom:50%;" />
 
 ### 插入数据
 
@@ -261,9 +261,9 @@ POST http://8.140.130.91:9200/haoke/user/1001
 }
 ```
 
-<img src="ElasticStack.assets/image-20210507124339044.png" alt="image-20210507124339044" style="zoom:67%;" />
+<img src="ElasticSearch.assets/image-20210507124339044.png" alt="image-20210507124339044" style="zoom:67%;" />
 
-![image-20210507124558507](ElasticStack.assets/image-20210507124558507.png)
+![image-20210507124558507](ElasticSearch.assets/image-20210507124558507.png)
 
 ---
 
@@ -296,7 +296,7 @@ POST http://8.140.130.91:9200/haoke/user
 }
 ```
 
-![image-20210507124706289](ElasticStack.assets/image-20210507124706289.png)
+![image-20210507124706289](ElasticSearch.assets/image-20210507124706289.png)
 
 ### 更新数据
 
@@ -337,7 +337,7 @@ PUT http://8.140.130.91:9200/haoke/user/1001
 
 可见分片中数据已更新
 
-![image-20210507124940978](ElasticStack.assets/image-20210507124940978.png)
+![image-20210507124940978](ElasticSearch.assets/image-20210507124940978.png)
 
 ---
 
@@ -376,7 +376,7 @@ POST http://8.140.130.91:9200/haoke/user/1001/_update
 }
 ```
 
-![image-20210507125539717](ElasticStack.assets/image-20210507125539717.png)
+![image-20210507125539717](ElasticSearch.assets/image-20210507125539717.png)
 
 ### 删除数据
 
@@ -405,7 +405,7 @@ DELETE http://8.140.130.91:9200/haoke/user/1001
 
 如果删除一条不存在的数据，会响应404  
 
-<img src="ElasticStack.assets/image-20210507125811825.png" alt="image-20210507125811825" style="zoom:50%;" />
+<img src="ElasticSearch.assets/image-20210507125811825.png" alt="image-20210507125811825" style="zoom:50%;" />
 
 >   删除一个文档，数据不会立即从磁盘上移除，只是被标记为已删除。
 >
@@ -413,7 +413,7 @@ DELETE http://8.140.130.91:9200/haoke/user/1001
 
 ### 搜索数据
 
-![image-20210507130819823](ElasticStack.assets/image-20210507130819823.png)
+![image-20210507130819823](ElasticSearch.assets/image-20210507130819823.png)
 
 ---
 
@@ -1024,7 +1024,7 @@ GET http://8.140.130.91:9200/haoke/user/iAA3RXkB81AnlYu4GXV6/_source?_source=id,
 HEAD http://8.140.130.91:9200/haoke/user/iAA3RXkB81AnlYu4GXV6
 ```
 
-![image-20210507203101668](ElasticStack.assets/image-20210507203101668.png)
+![image-20210507203101668](ElasticSearch.assets/image-20210507203101668.png)
 
 ---
 
@@ -1032,7 +1032,7 @@ HEAD http://8.140.130.91:9200/haoke/user/iAA3RXkB81AnlYu4GXV6
 HEAD http://8.140.130.91:9200/haoke/user/1
 ```
 
-![image-20210507203139388](ElasticStack.assets/image-20210507203139388.png)
+![image-20210507203139388](ElasticSearch.assets/image-20210507203139388.png)
 
 >   查询结果只是表示查询时刻存在与否，并不代表之后是否存在
 
@@ -1217,7 +1217,7 @@ POST http://8.140.130.91:9200/haoke/user/_bulk
 }
 ```
 
-![image-20210507205331017](ElasticStack.assets/image-20210507205331017.png)
+![image-20210507205331017](ElasticSearch.assets/image-20210507205331017.png)
 
 ---
 
@@ -1325,7 +1325,7 @@ GET /_search?size=5&from=5
 GET /_search?size=5&from=10
 ```
 
-![image-20210507212237603](ElasticStack.assets/image-20210507212237603.png)
+![image-20210507212237603](ElasticSearch.assets/image-20210507212237603.png)
 
 ---
 
@@ -1416,7 +1416,7 @@ PUT http://8.140.130.91:9200/test
 GET http://8.140.130.91:9200/test/_mapping
 ```
 
-<img src="ElasticStack.assets/image-20210507214605259.png" alt="image-20210507214605259" style="zoom:67%;" />
+<img src="ElasticSearch.assets/image-20210507214605259.png" alt="image-20210507214605259" style="zoom:67%;" />
 
 ---
 
@@ -1440,9 +1440,9 @@ POST http://8.140.130.91:9200/test/_bulk
 
 ```
 
-<img src="ElasticStack.assets/image-20210507215028083.png" alt="image-20210507215028083" style="zoom:67%;" />
+<img src="ElasticSearch.assets/image-20210507215028083.png" alt="image-20210507215028083" style="zoom:67%;" />
 
-![image-20210507215242424](ElasticStack.assets/image-20210507215242424.png)
+![image-20210507215242424](ElasticSearch.assets/image-20210507215242424.png)
 
 ### 结构化查询
 
@@ -1668,7 +1668,7 @@ POST http://8.140.130.91:9200/test/person/_search
 }
 ```
 
-<img src="ElasticStack.assets/image-20210507220717470.png" alt="image-20210507220717470" style="zoom:67%;" />
+<img src="ElasticSearch.assets/image-20210507220717470.png" alt="image-20210507220717470" style="zoom:67%;" />
 
 #### match查询
 
@@ -2482,7 +2482,7 @@ POST http://8.140.130.91:9200/test1/_bulk
 
 ---
 
-![image-20210508210723675](ElasticStack.assets/image-20210508210723675.png)
+![image-20210508210723675](ElasticSearch.assets/image-20210508210723675.png)
 
 #### 单词搜索
 
@@ -3045,7 +3045,7 @@ POST http://8.140.130.91:9200/test/person/_search
 
 **可见单词顺序也是会影响查询结果的**
 
-![image-20210508215930479](ElasticStack.assets/image-20210508215930479.png)
+![image-20210508215930479](ElasticSearch.assets/image-20210508215930479.png)
 
 ---
 
@@ -3481,6 +3481,35 @@ GET http://8.140.130.91:9200/_cluster/health
 | yellow | 所有主要分片可用，但不是所有复制分片都可用 |
 | red    | 不是所有的主要分片都可用                   |
 
+#### Exception BindTransportException[Failed to bind to
+
+```yml
+cluster.name: es-haoke-cluster
+
+node.name: node01
+node.master: true
+node.data: true
+
+#设置可以访问的ip,默认为0.0.0.0，这里全部设置通过
+network.bind_host: 0.0.0.0
+# 当前节点的私网ip
+network.host: 0.0.0.0
+# 当前节点的公网ip
+network.publish_host: 8.140.130.91
+#启用该物理机器所有网卡网络可访问
+http.host: 0.0.0.0
+
+# 当前节点的http访问端口
+http.port: 9200
+# 节点之间通信端口
+transport.tcp.port: 9300
+# 节点地址
+discovery.zen.ping.unicast.hosts: ["8.140.130.91:9300","8.140.130.91:9301","82.157.25.57:9302"]
+discovery.zen.minimum_master_nodes: 2
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+```
+
 ### 分片和副本
 
 为了将数据添加到Elasticsearch，我们需要**索引(index)**——一个存储关联数据的地方。实际上，索引只是一个用来指向一个或多个**分片(shards)**的**逻辑命名空间(logical namespace)**
@@ -3510,6 +3539,10 @@ GET http://8.140.130.91:9200/_cluster/health
     discovery.zen.minimum_master_nodes: 1
     http.cors.enabled: true
     http.cors.allow-origin: "*"
+    
+    docker create --name es-node01 --net host -v /data/es-cluster-data/node01/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml -v /data/es-cluster-data/node01/jvm.options:/usr/share/elasticsearch/config/jvm.options -v /data/es-cluster-data/node01/data:/usr/share/elasticsearch/data elasticsearch:6.5.4
+    
+    docker create --name es-node02 --net host -v /data/es-cluster-data/node02/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml -v /data/es-cluster-data/node02/jvm.options:/usr/share/elasticsearch/config/jvm.options -v /data/es-cluster-data/node03/data:/usr/share/elasticsearch/data elasticsearch:6.5.4
     
     docker create --name es-node03 --net host -v /data/es-cluster-data/node03/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml -v /data/es-cluster-data/node03/jvm.options:/usr/share/elasticsearch/config/jvm.options -v /data/es-cluster-data/node03/data:/usr/share/elasticsearch/data elasticsearch:6.5.4
     

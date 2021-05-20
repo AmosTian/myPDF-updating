@@ -114,10 +114,10 @@ RPC(Remote Procedure Call Protocal)——远程过程调用协议
 
 ```shell
 #拉取zk镜像
-docker pull zookeeper:3.5
+docker pull zookeeper:3.4
 
 #创建并启动容器
-docker run -d --name zk -p 2181:2181 zookeeper:3.5
+docker run -d --name zk -p 2181:2181 zookeeper:3.4
 ```
 
 ![image-20210311213645532](background.assets/image-20210311213645532.png)

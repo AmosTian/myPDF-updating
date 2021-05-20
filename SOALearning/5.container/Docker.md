@@ -153,6 +153,7 @@ yum-config-manager \
 --add-repo \
 http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 
+# 返回
 Adding repo from: http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 ```
 
@@ -170,7 +171,7 @@ systemctl start docker
 
 ### 8. 测试运行流程
 
-```
+```shell
 docker run hello-world
 ```
 
@@ -225,8 +226,6 @@ systemctl enable docker
 结果：
 
 ```shell
-systemctl enable docker
-
 Created symlink /etc/systemd/system/multi-user.target.wants/docker.service → /usr/lib/systemd/system/docker.service.
 ```
 
@@ -335,6 +334,20 @@ docker run -d -p 8088:8080 主机端口:容器内部端口
 10. 查看docker 日志
 docker logs mytomcat
 ```
+
+#### 开机重启
+
+```shell
+# 如果已经启动的项目，则使用update更新：
+docker update --restart=always isaler_v0.0.11
+```
+
+| Flag           | Description                                               |
+| -------------- | --------------------------------------------------------- |
+| no             | 不自动重启容器. (默认value)                               |
+| on-failure     | 容器发生error而退出(容器退出状态不为0)重启容器            |
+| unless-stopped | 在容器已经stop掉或Docker stoped/restarted的时候才重启容器 |
+| always         | 在容器已经stop掉或Docker stoped/restarted的时候才重启容器 |
 
 #### TomcatESC公网访问
 
